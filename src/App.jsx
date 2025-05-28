@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 const DAILY_WORDS = [
-  "PITSTOP", "DRIVERS", "RACING", "TYRE", "PODIUM", "ENGINE",
-  "CHAMPION", "LAPTIME", "VERSTAPPEN", "FERRARI", "MCLAREN",
-  "LANDO", "LECLERC", "PIASTRI"
+  "PITSTOP", "DRIVERS", "RACING", "TYRE", "PODIUM", "ENGINE", "CHAMPION", "LAPTIME", "VERSTAPPEN",
+  "FERRARI", "MCLAREN", "LANDO", "LECLERC", "PIASTRI", "REDBULL", "ALONSO", "HAMILTON", "MERCEDES",
+  "RUSSELL", "SILVERSTONE", "SPA", "MONACO", "AUSTIN", "BAKU", "MIAMI", "IMOLA", "ZANDVOORT",
+  "MEXICO", "SUZUKA", "YASMARINA", "DNF", "DRS", "ERS", "POLE", "QATAR", "PEREZ", "SAINZ",
+  "TSUNODA", "MAGNUSSEN", "HULKENBERG", "ALBON", "ZHOUGUANYU", "NORRIS", "RICCIARDO", "STROLL",
+  "SARGEANT", "VETTEL", "ROSBERG", "TIFOSI", "SLIPSTREAM", "BOXBOX", "OVERTAKE", "UNDERCUT",
+  "STRATEGY", "GRANDPRIX", "CIRCUIT", "RACEWEEK", "WHEELSPIN", "FRONTWING", "DOWNFORCE",
+  "AERO", "TEAMRADIO", "STEWARD", "YELLOWFLAG", "SAFETYCAR", "REDFLAG", "PENALTY", "QUALIFYING",
+  "PITLANE", "SECTOR", "SPLITTIME", "LIVERY", "GARAGE", "HARDTYRE", "SOFTTYRE", "MEDIUMTYRE",
+  "MARBLES", "CURB", "TRACKLIMITS", "VIRTUALSC", "BURNOUT", "GEARBOX", "WARMUPLAP", "FORMATION",
+  "LIGHTSOUT", "PARCFERME", "CHICANE", "HAIRPIN", "SEATFIT", "DEBRIS", "RACEDIR", "SLICKTYRE",
+  "INLAP", "OUTLAP", "PUSHLAP", "SETUP", "SUSPENSION", "DATA", "SIMULATOR", "KERS", "TELEMETRY"
 ];
 
 const COLORS = {
@@ -34,10 +43,15 @@ export default function F1Wordle() {
   const [largestStreak, setLargestStreak] = useState(() => parseInt(localStorage.getItem("f1wordle_largest_streak") || "0"));
   const [lastPlayDate, setLastPlayDate] = useState(() => localStorage.getItem("f1wordle_last_play_date") || "");
   const [showLongestStreak, setShowLongestStreak] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const gameOver = guesses.length === 6 && !solved;
 
-  // 🔥 Handle solved case
+  useEffect(() => {
+    const mobile = /Mobi|Android|iPhone|iPad|Tablet/i.test(navigator.userAgent);
+    setIsMobile(mobile);
+  }, []);
+
   useEffect(() => {
     if (solved) {
       const today = getTodayDateString();
@@ -60,7 +74,6 @@ export default function F1Wordle() {
     }
   }, [solved]);
 
-  // 🔥 Handle loss
   useEffect(() => {
     if (gameOver && !solved && lastPlayDate !== getTodayDateString()) {
       setStreak(0);
@@ -107,7 +120,7 @@ export default function F1Wordle() {
   }
 
   const onKeyDown = useCallback((event) => {
-    if (solved) return;
+    if (solved || isMobile) return;
     const key = event.key;
     if (key === "Backspace") {
       setCurrentGuess((prev) => prev.slice(0, -1));
@@ -116,7 +129,7 @@ export default function F1Wordle() {
     } else if (/^[a-zA-Z]$/.test(key)) {
       setCurrentGuess((prev) => (prev.length < wordLength ? prev + key.toUpperCase() : prev));
     }
-  }, [currentGuess, solved]);
+  }, [currentGuess, solved, isMobile]);
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
@@ -127,10 +140,22 @@ export default function F1Wordle() {
     setShowLongestStreak(true);
   }
 
+  function handleMobileInputChange(e) {
+    const value = e.target.value.toUpperCase();
+    if (value.length <= wordLength) {
+      setCurrentGuess(value);
+    }
+  }
+
+  function handleMobileInputSubmit(e) {
+    e.preventDefault();
+    handleSubmit();
+  }
+
   let fireColor = solved ? "#4caf50" : streak > 0 ? "orange" : "#000";
 
   return (
-    <div className="container" tabIndex={-1}>
+    <div className="container">
       <header>
         <h1>F1 Wordle</h1>
         <div
@@ -143,7 +168,7 @@ export default function F1Wordle() {
         </div>
       </header>
 
-      <div className="board" aria-label="Wordle board">
+      <div className="board">
         {guesses.map(({ word, feedback }, i) => (
           <div key={i} className="row">
             {word.split("").map((letter, j) => (
@@ -172,6 +197,27 @@ export default function F1Wordle() {
             </div>
           ))}
       </div>
+
+      {isMobile && !gameOver && !solved && (
+        <form onSubmit={handleMobileInputSubmit} style={{ marginTop: "1rem" }}>
+          <input
+            type="text"
+            value={currentGuess}
+            onChange={handleMobileInputChange}
+            maxLength={wordLength}
+            autoFocus
+            placeholder="Enter guess"
+            style={{
+              padding: "0.5rem 1rem",
+              fontSize: "1.2rem",
+              borderRadius: "0.5rem",
+              border: "2px solid #ccc",
+              textTransform: "uppercase",
+              width: "80%"
+            }}
+          />
+        </form>
+      )}
 
       {gameOver && (
         <div style={{ marginTop: "2rem", textAlign: "center", fontSize: "2rem", color: "red" }}>
