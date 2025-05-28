@@ -219,13 +219,36 @@ export default function F1Wordle() {
         </form>
       )}
 
-      {gameOver && (
-        <div style={{ marginTop: "2rem", textAlign: "center", fontSize: "2rem", color: "red" }}>
-          <p>Today's word was:</p>
-          <p style={{ fontSize: "3rem", letterSpacing: "0.1em", color: "orange" }}>{todayWord}</p>
-          <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Try again tomorrow!</p>
-        </div>
-      )}
+     {gameOver && (
+  <div
+    style={{
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      background: "rgba(255, 255, 255, 0.1)",
+      backdropFilter: "blur(15px)",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
+      borderRadius: "20px",
+      padding: "2rem",
+      zIndex: 1000,
+      textAlign: "center",
+      color: "white",
+      animation: "fadeIn 1s ease-in-out",
+      boxShadow: "0 4px 30px rgba(0, 0, 0, 0.3)",
+      width: "90%",
+      maxWidth: "400px"
+    }}
+  >
+    <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>🎉 Thanks for playing!</h2>
+    <p style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>Today's word was:</p>
+    <p style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#ff9800", letterSpacing: "0.2em" }}>
+      {todayWord}
+    </p>
+    <p style={{ fontSize: "1.2rem", marginTop: "1rem" }}>Try again tomorrow!</p>
+  </div>
+)}
+
 
       {showLongestStreak && (
         <p style={{ marginTop: "1rem", fontSize: "1.2rem", color: "#007bff", textAlign: "center" }}>
