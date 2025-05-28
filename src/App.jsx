@@ -186,7 +186,6 @@ export default function F1Wordle() {
           🔥 Your longest streak is: {largestStreak}
         </p>
       )}
-C:\Users\ridds\Desktop\f1 wordle\f1-wordle
     </div>
   );
 }
