@@ -1,174 +1,237 @@
-/* Reset and base */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+import React, { useState, useEffect, useCallback } from "react";
+
+const DAILY_WORDS = [
+  "PITSTOP", "DRIVERS", "RACING", "TYRE", "PODIUM", "ENGINE", "CHAMPION", "LAPTIME", "VERSTAPPEN",
+  "FERRARI", "MCLAREN", "LANDO", "LECLERC", "PIASTRI", "REDBULL", "ALONSO", "HAMILTON", "MERCEDES",
+  "RUSSELL", "SILVERSTONE", "SPA", "MONACO", "AUSTIN", "BAKU", "MIAMI", "IMOLA", "ZANDVOORT",
+  "MEXICO", "SUZUKA", "YASMARINA", "DNF", "DRS", "ERS", "POLE", "QATAR", "PEREZ", "SAINZ",
+  "TSUNODA", "MAGNUSSEN", "HULKENBERG", "ALBON", "ZHOUGUANYU", "NORRIS", "RICCIARDO", "STROLL",
+  "SARGEANT", "VETTEL", "ROSBERG", "TIFOSI", "SLIPSTREAM", "BOXBOX", "OVERTAKE", "UNDERCUT",
+  "STRATEGY", "GRANDPRIX", "CIRCUIT", "RACEWEEK", "WHEELSPIN", "FRONTWING", "DOWNFORCE",
+  "AERO", "TEAMRADIO", "STEWARD", "YELLOWFLAG", "SAFETYCAR", "REDFLAG", "PENALTY", "QUALIFYING",
+  "PITLANE", "SECTOR", "SPLITTIME", "LIVERY", "GARAGE", "HARDTYRE", "SOFTTYRE", "MEDIUMTYRE",
+  "MARBLES", "CURB", "TRACKLIMITS", "VIRTUALSC", "BURNOUT", "GEARBOX", "WARMUPLAP", "FORMATION",
+  "LIGHTSOUT", "PARCFERME", "CHICANE", "HAIRPIN", "SEATFIT", "DEBRIS", "RACEDIR", "SLICKTYRE",
+  "INLAP", "OUTLAP", "PUSHLAP", "SETUP", "SUSPENSION", "DATA", "SIMULATOR", "KERS", "TELEMETRY"
+];
+
+const COLORS = {
+  correct: "#538d4e",
+  present: "#b59f3b",
+  absent: "#3a3a3c",
+  empty: "#121213",
+};
+
+function getTodayWord() {
+  const start = new Date(2025, 0, 1).getTime();
+  const now = new Date().getTime();
+  const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  return DAILY_WORDS[diffDays % DAILY_WORDS.length];
 }
 
-
-body {
-  background-color: #121213;
-  color: white;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 1rem;
-}
-.hint-popup {
-  background: #222;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  position: relative;
-  max-width: 300px;
-  margin: 20px auto;
-  text-align: center;
+function getTodayDateString() {
+  return new Date().toISOString().split("T")[0];
 }
 
-.hint-popup .close-btn {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
+export default function F1Wordle() {
+  const todayWord = getTodayWord();
+  const wordLength = todayWord.length;
+  const [guesses, setGuesses] = useState([]);
+  const [currentGuess, setCurrentGuess] = useState("");
+  const [solved, setSolved] = useState(false);
+  const [streak, setStreak] = useState(() => parseInt(localStorage.getItem("f1wordle_streak") || "0"));
+  const [largestStreak, setLargestStreak] = useState(() => parseInt(localStorage.getItem("f1wordle_largest_streak") || "0"));
+  const [lastPlayDate, setLastPlayDate] = useState(() => localStorage.getItem("f1wordle_last_play_date") || "");
+  const [showLongestStreak, setShowLongestStreak] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
+  const gameOver = guesses.length === 6 && !solved;
 
-.container {
-  max-width: 300px;
-  width: 70vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  outline: none;
-}
+  useEffect(() => {
+    const mobile = /Mobi|Android|iPhone|iPad|Tablet/i.test(navigator.userAgent);
+    setIsMobile(mobile);
+  }, []);
 
-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
+  useEffect(() => {
+    if (solved) {
+      const today = getTodayDateString();
+      if (lastPlayDate === today) return;
 
-h1 {
-  font-weight: 700;
-  font-size: 2rem;
-}
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-.fire-icon {
-  font-size: 1.8rem;
-  cursor: default;
-  user-select: none;
-}
+      const newStreak = lastPlayDate === yesterdayStr ? streak + 1 : 1;
+      setStreak(newStreak);
+      setLastPlayDate(today);
+      localStorage.setItem("f1wordle_streak", newStreak.toString());
+      localStorage.setItem("f1wordle_last_play_date", today);
 
-.board {
-  display: grid;
-  gap: 0.3rem;
-  margin-bottom: 1rem;
-  width: 100%;
-}
+      if (newStreak > largestStreak) {
+        setLargestStreak(newStreak);
+        localStorage.setItem("f1wordle_largest_streak", newStreak.toString());
+      }
+    }
+  }, [solved]);
 
-.row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(2.3rem, 1fr));
-  flex-direction: row;  /* (default, but keep it clear) */
-  justify-content: center;
-  gap: 0.25rem;          /* Space between letters */
-  margin: 0.25rem 0;
-  gap: 0.3rem;
-}
+  useEffect(() => {
+    if (gameOver && !solved && lastPlayDate !== getTodayDateString()) {
+      setStreak(0);
+      localStorage.setItem("f1wordle_streak", "0");
+      const today = getTodayDateString();
+      localStorage.setItem("f1wordle_last_play_date", today);
+      setLastPlayDate(today);
+    }
+  }, [gameOver, solved]);
 
-.cell {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background-color: #3a3a3c;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  font-size: 1.3rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  user-select: none;
-}
+  function checkGuess(guess) {
+    const result = [];
+    const target = todayWord.split("");
+    const guessArr = guess.split("");
+    const letterCount = {};
 
-.cell.empty {
-  background-color: #121213;
-  border: 2px solid #3a3a3c;
-}
-
-.input-form {
-  display: flex;
-  width: 100%;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-input[type="text"] {
-  flex-grow: 1;
-  font-size: 1.2rem;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  text-transform: uppercase;
-}
-
-button {
-  background-color: #538d4e;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 0 1rem;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #4a7c43;
-}
-
-.hint-popup {
-  background-color: #222;
-  padding: 0.75rem 1rem;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  width: 100%;
-  text-align: center;
-  color: #b59f3b; /* gold-like */
-}
-
-footer {
-  width: 100%;
-  text-align: center;
-}
-
-.buy-cookie {
-  color: #e0a800;
-  text-decoration: none;
-  font-weight: 600;
-  user-select: none;
-}
-
-.buy-cookie:hover {
-  text-decoration: underline;
-}
-
-/* Responsive adjustments */
-@media (max-width: 400px) {
-  .cell {
-    font-size: 1rem;
+    target.forEach((l) => (letterCount[l] = (letterCount[l] || 0) + 1));
+    guessArr.forEach((l, i) => {
+      if (l === target[i]) {
+        result[i] = "correct";
+        letterCount[l] -= 1;
+      }
+    });
+    guessArr.forEach((l, i) => {
+      if (result[i]) return;
+      if (letterCount[l] > 0) {
+        result[i] = "present";
+        letterCount[l] -= 1;
+      } else {
+        result[i] = "absent";
+      }
+    });
+    return result;
   }
 
-  input[type="text"] {
-    font-size: 1rem;
+  function handleSubmit() {
+    if (solved || currentGuess.length !== wordLength) return;
+    const guessUpper = currentGuess.toUpperCase();
+    const feedback = checkGuess(guessUpper);
+    const newGuesses = [...guesses, { word: guessUpper, feedback }];
+    setGuesses(newGuesses);
+    setCurrentGuess("");
+    if (guessUpper === todayWord) setSolved(true);
   }
+
+  const onKeyDown = useCallback((event) => {
+    if (solved || isMobile) return;
+    const key = event.key;
+    if (key === "Backspace") {
+      setCurrentGuess((prev) => prev.slice(0, -1));
+    } else if (key === "Enter") {
+      if (currentGuess.length === wordLength) handleSubmit();
+    } else if (/^[a-zA-Z]$/.test(key)) {
+      setCurrentGuess((prev) => (prev.length < wordLength ? prev + key.toUpperCase() : prev));
+    }
+  }, [currentGuess, solved, isMobile]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onKeyDown]);
+
+  function handleShowLongestStreak() {
+    setShowLongestStreak(true);
+  }
+
+  function handleMobileInputChange(e) {
+    const value = e.target.value.toUpperCase();
+    if (value.length <= wordLength) {
+      setCurrentGuess(value);
+    }
+  }
+
+  function handleMobileInputSubmit(e) {
+    e.preventDefault();
+    handleSubmit();
+  }
+
+  let fireColor = solved ? "#4caf50" : streak > 0 ? "orange" : "#000";
+
+  return (
+    <div className="container">
+      <header>
+        <h1>F1 Wordle</h1>
+        <div
+          className="fire-icon"
+          title={`Current Streak: ${streak}`}
+          onClick={handleShowLongestStreak}
+          style={{ color: fireColor, fontSize: "2rem", cursor: "pointer" }}
+        >
+          🔥
+        </div>
+      </header>
+
+      <div className="board">
+        {guesses.map(({ word, feedback }, i) => (
+          <div key={i} className="row">
+            {word.split("").map((letter, j) => (
+              <div key={j} className="cell" style={{ backgroundColor: COLORS[feedback[j]] }}>
+                {letter}
+              </div>
+            ))}
+          </div>
+        ))}
+
+        {!gameOver &&
+          Array.from({ length: 6 - guesses.length }, (_, i) => i + guesses.length).map((i, index) => (
+            <div key={i} className="row">
+              {Array.from({ length: wordLength }).map((_, j) => {
+                const char = index === 0 && j < currentGuess.length ? currentGuess[j] : "";
+                return (
+                  <div
+                    key={j}
+                    className="cell empty"
+                    style={{ borderColor: index === 0 ? "#888" : "#555" }}
+                  >
+                    {char}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+      </div>
+
+      {isMobile && !gameOver && !solved && (
+        <form onSubmit={handleMobileInputSubmit} style={{ marginTop: "1rem" }}>
+          <input
+            type="text"
+            value={currentGuess}
+            onChange={handleMobileInputChange}
+            maxLength={wordLength}
+            autoFocus
+            placeholder="Enter guess"
+            style={{
+              padding: "0.5rem 1rem",
+              fontSize: "1.2rem",
+              borderRadius: "0.5rem",
+              border: "2px solid #ccc",
+              textTransform: "uppercase",
+              width: "80%"
+            }}
+          />
+        </form>
+      )}
+
+      {gameOver && (
+        <div style={{ marginTop: "2rem", textAlign: "center", fontSize: "2rem", color: "red" }}>
+          <p>Today's word was:</p>
+          <p style={{ fontSize: "3rem", letterSpacing: "0.1em", color: "orange" }}>{todayWord}</p>
+          <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Try again tomorrow!</p>
+        </div>
+      )}
+
+      {showLongestStreak && (
+        <p style={{ marginTop: "1rem", fontSize: "1.2rem", color: "#007bff", textAlign: "center" }}>
+          🔥 Your longest streak is: {largestStreak}
+        </p>
+      )}
+    </div>
+  );
 }
