@@ -183,8 +183,8 @@ footer {
 .word-popup h2 {
   font-size: 1.6rem;
   margin-bottom: 0.5rem;
-  color: #facc15;
-  font-weight: 700;
+  color: #ffffff !important;
+  font-weight: 700 !important;
   text-shadow: 1px 1px 2px #b28e00;
 }
 
@@ -193,8 +193,9 @@ footer {
   font-weight: 900;
   margin: 0.5rem 0 1rem 0;
   color: #7cf3a2;
+  font-weight: 900 !important;
   letter-spacing: 0.25em;
-  text-shadow: 0 0 5px #4caf50;
+  text-shadow: 0 0 5px 
   user-select: text;
 }
 
