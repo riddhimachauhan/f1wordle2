@@ -4,6 +4,9 @@
   margin: 0;
   padding: 0;
 }
+html, body {
+  overflow-x: hidden;
+}
 body {
   background: 
     linear-gradient(rgba(0,0,0,0.8), rgba(255,0,0,0.3)),
@@ -15,40 +18,17 @@ body {
   align-items: flex-start;
   min-height: 100vh;
   padding: 1rem;
-  margin: 0;
-  overflow-x: hidden;
 }
-
-.hint-popup {
-  background: #222;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  position: relative;
-  max-width: 300px;
-  margin: 20px auto;
-  text-align: center;
-}
-
-.hint-popup .close-btn {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
 
 .container {
-  max-width: 300px;
-  width: 70vw;
+  width: 100%;
+  max-width: 320px;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   outline: none;
+  box-sizing: border-box;
 }
 
 header {
@@ -79,12 +59,10 @@ h1 {
 
 .row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(2.3rem, 1fr));
-  flex-direction: row;  /* (default, but keep it clear) */
+  grid-template-columns: repeat(5, 1fr);
   justify-content: center;
-  gap: 0.25rem;          /* Space between letters */
-  margin: 0.25rem 0;
   gap: 0.3rem;
+  margin: 0.25rem 0;
 }
 
 .cell {
@@ -146,7 +124,20 @@ button:hover {
   margin-bottom: 1rem;
   width: 100%;
   text-align: center;
-  color: #b59f3b; /* gold-like */
+  color: #b59f3b;
+  position: relative;
+  max-width: 300px;
+}
+
+.hint-popup .close-btn {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 footer {
@@ -165,26 +156,7 @@ footer {
   text-decoration: underline;
 }
 
-/* Responsive adjustments */
-@media (max-width: 400px) {
-  .cell {
-    font-size: 1rem;
-  }
-
-  input[type="text"] {
-    font-size: 1rem;
-  }
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
+/* Word of the day popup */
 .word-popup {
   position: fixed;
   top: 50%;
@@ -245,7 +217,18 @@ footer {
   background: #e6b800;
 }
 
-/* Animation for popup */
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
 @keyframes fadeInScale {
   0% {
     opacity: 0;
@@ -257,3 +240,31 @@ footer {
   }
 }
 
+/* Responsive adjustments */
+@media (max-width: 400px) {
+  .cell {
+    font-size: 0.95rem;
+    padding: 0.2rem;
+  }
+
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+
+  .word-popup {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .word-popup h2 {
+    font-size: 1.3rem;
+  }
+
+  .word-popup .word {
+    font-size: 1.8rem;
+  }
+
+  .word-popup .emoji {
+    font-size: 2.4rem;
+  }
+}
