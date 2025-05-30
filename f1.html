@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>F1 Wordle - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: url('Screenshot-2025-05-29-160123.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+    .login-box {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .login-box h1 {
+      margin: 0 0 1.2rem 0;
+      font-size: 2rem;
+      color: #d32f2f;
+      letter-spacing: 2px;
+    }
+    .login-box label {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #222;
+      font-weight: 500;
+    }
+    .login-box input[type="text"] {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1.2rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .login-box input[type="text"]:focus {
+      border: 1.5px solid #d32f2f;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #d32f2f;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-box button:hover {
+      background: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>F1 Wordle</h1>
+    <form id="loginForm" autocomplete="off">
+      <label for="nameInput">Enter your name</label>
+      <input type="text" id="nameInput" name="name" required maxlength="30" placeholder="Your name">
+      <button type="submit">Next</button>
+    </form>
+  </div>
+ <script>
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('nameInput').value.trim();
+    if (name) {
+      // Save to MySQL via backend
+      try {
+        const response = await fetch('http://localhost:5000/api/save-name', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name })
+        });
+        const result = await response.json();
+        if (result.success) {
+          localStorage.setItem('f1wordle_name', name);
+          window.location.href = 'index.html';
+        } else {
+          alert('Error saving name. Try again.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server error. Try again.');
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
