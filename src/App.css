@@ -1,132 +1,274 @@
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #f8fafc;
+/* Reset and base */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+html, body {
+  overflow-x: hidden;
+}
+body {
+  background: 
+    linear-gradient(rgba(0,0,0,0.8), rgba(255,0,0,0.3)),
+    url('./f1.jpg') no-repeat center center/cover;
+  color: white;
+  font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif';
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 1rem;
+}
 
 .container {
-  max-width: 1100px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  padding: 32px;
+  width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
   box-sizing: border-box;
 }
 
-h1 {
-  text-align: center;
-  color: #22223b;
-  margin-bottom: 32px;
-  font-size: 2.5rem;
-  word-wrap: break-word;
-}
 
-/* Controls section */
-.controls {
+header {
+  width: 100%;
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.fire-icon {
+  font-size: 1.8rem;
+  cursor: default;
+  user-select: none;
+}
+
+.board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.3rem;
+  width: 100%;
+}
+
+
+.cell {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #3a3a3c;
+  display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  user-select: none;
 }
 
-/* Buttons and selects */
-select, button {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid #c9c9c9;
-  background: #f1f1f1;
-  font-size: 1rem;
-  transition: border 0.2s;
+
+.cell.empty {
+  background-color: #121213;
+  border: 2px solid #3a3a3c;
 }
 
-select:focus, button:focus {
+.input-form {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
   outline: none;
-  border: 1.5px solid #4f8cff;
+  text-transform: uppercase;
 }
 
 button {
-  background: #4f8cff;
-  color: #fff;
+  background-color: #538d4e;
+  color: white;
   border: none;
+  border-radius: 5px;
+  padding: 0 1rem;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background: #356ae6;
+  background-color: #4a7c43;
 }
 
-/* Table styling */
-table {
+.hint-popup {
+  background-color: #222;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
   width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
+  text-align: center;
+  color: #b59f3b;
+  position: relative;
+  max-width: 300px;
 }
 
-th, td {
-  padding: 12px 8px;
+.hint-popup .close-btn {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+footer {
+  width: 100%;
   text-align: center;
 }
 
-th {
-  background: #f2f5fa;
-  color: #22223b;
+.buy-cookie {
+  color: #e0a800;
+  text-decoration: none;
+  font-weight: 600;
+  user-select: none;
+}
+
+.buy-cookie:hover {
+  text-decoration: underline;
+}
+
+/* Word of the day popup */
+.word-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 2rem 2.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  color: #fff;
+  border: 2px solid #facc15;
+  z-index: 9999;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.7);
+  animation: fadeInScale 0.4s ease forwards;
+  user-select: none;
+}
+
+.word-popup h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-shadow: 1px 1px 2px #b28e00;
+}
+
+.word-popup .word {
+  font-size: 2.4rem;
+  font-weight: 900;
+  margin: 0.5rem 0 1rem 0;
+  color: #7cf3a2;
+  font-weight: 900 !important;
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 5px ;
+  user-select: text;
+}
+
+.word-popup .emoji {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.word-popup button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: #facc15;
+  border: none;
+  color: #ffffff;
   font-weight: 700;
-  border-bottom: 2px solid #e7e7e7;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  box-shadow: 0 3px 5px rgba(250, 204, 21, 0.6);
 }
 
-tr:nth-child(even) {
-  background: #f9f9f9;
+.word-popup button:hover {
+  background: #e6b800;
 }
 
-tr:hover {
-  background: #e0e7ff;
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .container {
-    margin: 20px;
-    padding: 20px;
+@media (max-width: 400px) {
+  .cell {
+    font-size: 0.95rem;
+    padding: 0.2rem;
   }
 
-  h1 {
-    font-size: 2rem;
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 0.4rem;
   }
 
-  select, button {
-    font-size: 0.9rem;
-    padding: 6px 12px;
+  .word-popup {
+    padding: 1.2rem 1.5rem;
   }
 
-  th, td {
-    font-size: 0.85rem;
-    padding: 8px 6px;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.6rem;
+  .word-popup h2 {
+    font-size: 1.3rem;
   }
 
-  .controls {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
+  .word-popup .word {
+    font-size: 1.8rem;
   }
 
-  select, button {
-    width: 100%;
-    font-size: 0.85rem;
-  }
-
-  th, td {
-    font-size: 0.75rem;
+  .word-popup .emoji {
+    font-size: 2.4rem;
   }
 }
