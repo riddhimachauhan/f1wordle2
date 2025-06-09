@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
+<header>
+  <div className="title">F1 Wordle</div>
+  <div className="fire-icon">🔥</div>
+</header>
 
 const DAILY_WORDS = [
   "PITSTOP", "DRIVERS", "RACING", "TYRE", "PODIUM", "ENGINE", "CHAMPION", "LAPTIME", "VERSTAPPEN",
