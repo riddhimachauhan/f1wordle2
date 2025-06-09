@@ -61,6 +61,13 @@ button:focus-visible {
   }
   a:hover {
     color: #747bff;
+
+
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
 header {
   width: 100%;
   display: flex;
@@ -84,10 +91,4 @@ header {
   margin-left: 1rem;
   cursor: pointer;
   flex-shrink: 0;
-}
-
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
