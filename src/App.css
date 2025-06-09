@@ -273,34 +273,34 @@ footer {
   }
  
 }
-@media (max-width: 300px) {
- header {
+header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-  padding: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  box-sizing: border-box;
 }
 
 h1 {
-  font-size: 1.5rem;
-  flex-grow: 1;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: left;
+  flex: 1;
 }
 
 .fire-icon {
-  font-size: 1.5rem;
-  margin-left: 0.75rem;
+  font-size: 1.6rem;
+  margin-left: 1rem;
   flex-shrink: 0;
   cursor: pointer;
 }
 
-}
+
 
 
 
