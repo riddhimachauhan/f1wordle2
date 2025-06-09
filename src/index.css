@@ -61,6 +61,31 @@ button:focus-visible {
   }
   a:hover {
     color: #747bff;
+header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fire-icon {
+  font-size: 1.8rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
   }
   button {
     background-color: #f9f9f9;
