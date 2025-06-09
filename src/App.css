@@ -271,29 +271,34 @@ footer {
   .word-popup .emoji {
     font-size: 2.4rem;
   }
+ 
+}
+@media (max-width: 600px) {
   header {
-    flex-direction: row;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 0.5rem;
+    padding: 0 0.5rem;
+    overflow: hidden;
   }
 
   h1 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-align: left;
     flex: 1;
-    white-space: nowrap;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 
   .fire-icon {
-    font-size: 1.6rem;
-    margin-left: 0.75rem;
+    font-size: 1.5rem;
     flex-shrink: 0;
+    margin-left: 0.5rem;
   }
 }
+
 
 
 
