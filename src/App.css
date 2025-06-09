@@ -30,24 +30,29 @@ body {
   box-sizing: border-box;
 }
 
-
 header {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding: 0.6rem 1rem;
+  box-sizing: border-box;
 }
 
 h1 {
   font-weight: 700;
-  font-size: 2rem;
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fire-icon {
-  font-size: 1.8rem;
-  cursor: default;
-  user-select: none;
+  font-size: clamp(1.4rem, 5vw, 1.8rem);
+  cursor: pointer;
+  margin-left: 1rem;
+  flex-shrink: 0;
 }
 
 .board {
@@ -58,14 +63,12 @@ h1 {
   margin-bottom: 1rem;
 }
 
-
 .row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.3rem;
   width: 100%;
 }
-
 
 .cell {
   width: 100%;
@@ -75,12 +78,11 @@ h1 {
   justify-content: center;
   align-items: center;
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: clamp(0.95rem, 4vw, 1.3rem);
   border-radius: 4px;
   text-transform: uppercase;
   user-select: none;
 }
-
 
 .cell.empty {
   background-color: #121213;
@@ -96,7 +98,7 @@ h1 {
 
 input[type="text"] {
   flex-grow: 1;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   padding: 0.5rem 1rem;
   border-radius: 5px;
   border: none;
@@ -109,7 +111,7 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 0 1rem;
+  padding: 0.4rem 1rem;
   cursor: pointer;
   font-weight: 700;
   transition: background-color 0.3s ease;
@@ -123,7 +125,7 @@ button:hover {
   background-color: #222;
   padding: 0.75rem 1rem;
   border-radius: 5px;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
   margin-bottom: 1rem;
   width: 100%;
   text-align: center;
@@ -167,7 +169,7 @@ footer {
   transform: translate(-50%, -50%);
   background: rgba(30, 30, 30, 0.85);
   backdrop-filter: blur(12px);
-  padding: 2rem 2.5rem;
+  padding: clamp(1.2rem, 3vw, 2rem) clamp(1.5rem, 4vw, 2.5rem);
   border-radius: 1rem;
   text-align: center;
   color: #fff;
@@ -181,7 +183,7 @@ footer {
 }
 
 .word-popup h2 {
-  font-size: 1.6rem;
+  font-size: clamp(1.3rem, 4vw, 1.6rem);
   margin-bottom: 0.5rem;
   color: #ffffff !important;
   font-weight: 700 !important;
@@ -189,18 +191,17 @@ footer {
 }
 
 .word-popup .word {
-  font-size: 2.4rem;
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
   font-weight: 900;
   margin: 0.5rem 0 1rem 0;
   color: #7cf3a2;
-  font-weight: 900 !important;
   letter-spacing: 0.25em;
-  text-shadow: 0 0 5px ;
+  text-shadow: 0 0 5px;
   user-select: text;
 }
 
 .word-popup .emoji {
-  font-size: 2.8rem;
+  font-size: clamp(2.4rem, 7vw, 2.8rem);
   margin-bottom: 0.5rem;
 }
 
@@ -245,65 +246,52 @@ footer {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+  .row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .input-form {
+    flex-direction: column;
+  }
+  input[type="text"] {
+    width: 100%;
+  }
+  button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 300px) {
   .cell {
     font-size: 0.95rem;
     padding: 0.2rem;
   }
-
   input[type="text"] {
     font-size: 1rem;
     padding: 0.4rem;
   }
-
   .word-popup {
     padding: 1.2rem 1.5rem;
   }
-
   .word-popup h2 {
     font-size: 1.3rem;
   }
-
   .word-popup .word {
     font-size: 1.8rem;
   }
-
   .word-popup .emoji {
     font-size: 2.4rem;
   }
- 
 }
-@media (max-width: 300px) {
-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 1rem;
-  margin-bottom: 1rem;
-  box-sizing: border-box;
-}
-
-.title {
-  font-weight: 700;
-  font-size: 2rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.fire-icon {
-  font-size: 1.8rem;
-  margin-left: 1rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-
-}
-
-
-
-
-
-
