@@ -274,29 +274,32 @@ footer {
  
 }
 @media (max-width: 600px) {
-  header {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 0.5rem;
-    overflow: hidden;
-  }
+ header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0 0.5rem;
+}
 
-  h1 {
-    font-size: 1.2rem;
-    text-align: left;
-    flex: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+h1 {
+  font-size: 1.5rem;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
 
-  .fire-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-    margin-left: 0.5rem;
-  }
+.fire-icon {
+  font-size: 1.5rem;
+  margin-left: 0.75rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 }
 
 
